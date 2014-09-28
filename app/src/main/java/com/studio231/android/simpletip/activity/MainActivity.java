@@ -2,6 +2,7 @@ package com.studio231.android.simpletip.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.studio231.android.simpletip.R;
+import com.studio231.android.simpletip.constant.C;
 import com.studio231.android.simpletip.fragment.MainFragment;
+import com.studio231.android.simpletip.fragment.NumpadFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements
+        MainFragment.OnOptionButtonSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +47,31 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOptionButtonSelected(int type) {
+        switch(type) {
+            case C.BUTTON_TYPE_COST:
+                swapFragment(new NumpadFragment());
+                break;
+            case C.BUTTON_TYPE_TIP:
+                swapFragment(new NumpadFragment());
+                break;
+            case C.BUTTON_TYPE_SPLIT:
+                break;
+        }
+    }
+
+    private void swapFragment(Fragment f) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.setCustomAnimations(R.anim.enter_from_bottom,
+                R.anim.exit_to_bottom,
+                R.anim.enter_from_bottom,
+                R.anim.exit_to_bottom);
+        ft.addToBackStack(null);
+        ft.replace(R.id.container, f);
+        ft.commit();
     }
 }
